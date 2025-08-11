@@ -13,32 +13,71 @@ import { UserTrendsChart } from "@/components/admin/UserTrendsChart"
 import { DashboardStats } from "@/components/admin/DashboardStats"
 import { toast } from "sonner"
 
+interface User {
+  id: number
+  name: string
+  email: string
+  trips: number
+  status: "active" | "inactive"
+  avatar: string
+  lastActive?: string
+  joinDate?: string
+}
+
+interface CityData {
+  name: string
+  value: number
+  color: string
+}
+
+interface ActivityData {
+  activity: string
+  count: number
+  color?: string
+}
+
+interface TrendData {
+  period: string
+  users: number
+  growth?: number
+}
+
+interface DashboardStats {
+  totalUsers: number
+  activeUsers: number
+  totalTrips: number
+  averageTripsPerUser: number
+  monthlyGrowth: number
+  topCity: string
+  topActivity: string
+}
+
 interface DashboardData {
-  users: any[]
-  popularCities: any[]
-  activities: any[]
-  userTrends: any[]
-  stats: any
+  users: User[]
+  popularCities: CityData[]
+  activities: ActivityData[]
+  userTrends: TrendData[]
+  stats: DashboardStats
 }
 
 export default function AdminDashboard() {
-  const [activeTab, setActiveTab] = useState("users")
+  const [activeTab, setActiveTab] = useState<string>("users")
   const [data, setData] = useState<DashboardData | null>(null)
-  const [loading, setLoading] = useState(true)
-  const [searchTerm, setSearchTerm] = useState("")
+  const [loading, setLoading] = useState<boolean>(true)
+  const [searchTerm, setSearchTerm] = useState<string>("")
 
   useEffect(() => {
     fetchDashboardData()
   }, [])
 
-  const fetchDashboardData = async () => {
+  const fetchDashboardData = async (): Promise<void> => {
     try {
       setLoading(true)
       const response = await fetch('/api/admin/dashboard')
       if (!response.ok) {
         throw new Error('Failed to fetch dashboard data')
       }
-      const dashboardData = await response.json()
+      const dashboardData: DashboardData = await response.json()
       setData(dashboardData)
     } catch (error) {
       console.error('Error fetching dashboard data:', error)
@@ -48,12 +87,12 @@ export default function AdminDashboard() {
     }
   }
 
-  const handleEditUser = (user: any) => {
+  const handleEditUser = (user: User): void => {
     toast.info(`Edit user: ${user.name}`)
     // TODO: Implement edit user functionality
   }
 
-  const handleDeleteUser = async (userId: number) => {
+  const handleDeleteUser = async (userId: number): Promise<void> => {
     try {
       const response = await fetch('/api/admin/dashboard', {
         method: 'POST',
@@ -78,12 +117,12 @@ export default function AdminDashboard() {
     }
   }
 
-  const handleViewUser = (user: any) => {
+  const handleViewUser = (user: User): void => {
     toast.info(`View user: ${user.name}`)
     // TODO: Implement view user functionality
   }
 
-  const filteredUsers = data?.users?.filter(user => 
+  const filteredUsers: User[] = data?.users?.filter(user => 
     user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     user.email.toLowerCase().includes(searchTerm.toLowerCase())
   ) || []
@@ -140,7 +179,7 @@ export default function AdminDashboard() {
                 borderWidth: '1px'
               }}
               value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchTerm(e.target.value)}
             />
           </div>
           <Button variant="outline" style={{ borderColor: '#8E9C78', color: '#000000', backgroundColor: '#FFFFFF' }}>
