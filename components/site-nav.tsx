@@ -1,5 +1,5 @@
 "use client"
-
+import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs"
 import { Sparkles } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useClerk } from "@clerk/nextjs"
@@ -12,18 +12,24 @@ export function SiteNav() {
         <a href="/" className="flex items-center gap-2 text-lg font-semibold text-primary hover:text-primary/80 transition-colors">
           <span className="inline-flex size-7 items-center justify-center rounded-md border border-primary bg-primary/10"><Sparkles className="size-4 text-primary" /></span>
           <span>GlobeTrotter</span>
+
         </a>
         <nav className="hidden items-center gap-6 text-sm font-medium md:flex">
           <a className="hover:text-primary transition-colors" href="/llm">AI Travel Planner</a>
           <a className="hover:text-primary transition-colors" href="/mapcalendar">Map & Calendar</a>
         </nav>
         <div className="flex items-center justify-end">
-          <Button
-            className="h-10 rounded-full px-5"
-            onClick={() => openSignIn()} 
-          >
-            Login
-          </Button>
+          <SignedOut>
+            <Button
+              className="h-10 rounded-full px-5"
+              onClick={() => openSignIn()}
+            >
+              Login
+            </Button>
+          </SignedOut>
+          <SignedIn>
+            <UserButton></UserButton>
+          </SignedIn>
         </div>
       </div>
     </header>
