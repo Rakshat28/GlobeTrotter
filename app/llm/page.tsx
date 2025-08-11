@@ -151,8 +151,9 @@ export default function LLMPage() {
       const data: ApiResponse = await res.json();
       setPlan(data.plan);
       setSummary(data.summary);
-    } catch (err: any) {
-      setError(err.message || "Unknown error");
+    } catch (err: unknown) {
+      const errorMessage = err instanceof Error ? err.message : 'Unknown error';
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }

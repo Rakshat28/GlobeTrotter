@@ -1,6 +1,26 @@
 import { NextResponse } from "next/server";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
+interface TravelPlan {
+  itinerary: Array<{
+    day: string;
+    morning: string;
+    afternoon: string;
+    evening: string;
+    accommodation: string;
+    meals: string;
+    estimated_cost: string;
+  }>;
+  total_estimated_cost: string;
+  travel_tips: string[];
+  packing_list: string[];
+  emergency_contacts: {
+    local_emergency: string;
+    embassy: string;
+    hotel: string;
+  };
+}
+
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY!;
 const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
 
@@ -41,6 +61,10 @@ IMPORTANT: Respond with ONLY valid JSON in this format:
 
 export async function POST(req: Request) {
   try {
+    if (!GEMINI_API_KEY) {
+      return NextResponse.json({ error: "Gemini API key not configured" }, { status: 500 });
+    }
+
     const travelData = await req.json();
 
     const formattedPrompt = TRAVEL_PROMPT_TEMPLATE
@@ -73,19 +97,26 @@ export async function POST(req: Request) {
     }
     responseText = responseText.trim();
 
-    let travelPlan: any;
+    let travelPlan: TravelPlan;
     try {
       travelPlan = JSON.parse(responseText);
-    } catch {
+    } catch (parseError) {
+      // Try to fix common JSON parsing issues
       const fixedText = responseText.replace(/,}/g, "}").replace(/,]/g, "]");
-      travelPlan = JSON.parse(fixedText);
+      try {
+        travelPlan = JSON.parse(fixedText);
+      } catch {
+        throw new Error("Failed to parse travel plan response from AI");
+      }
     }
 
     return NextResponse.json({
       plan: travelPlan,
       summary: `Trip to ${travelData.destination} for ${travelData.duration} days. Estimated budget: ${travelPlan.total_estimated_cost}.`,
     });
-  } catch (err: any) {
-    return NextResponse.json({ error: err.message }, { status: 500 });
+  } catch (err: unknown) {
+    const errorMessage = err instanceof Error ? err.message : 'An unknown error occurred';
+    console.error('Travel plan generation error:', err);
+    return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
 }
