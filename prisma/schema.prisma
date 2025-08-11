@@ -145,7 +145,7 @@ model StopActivity {
 
 model Review {
   review_id   Int      @id @default(autoincrement())
-  user_id     Int
+  user_id     String
   trip_id     Int
   stars       Int      @db.SmallInt
   description String
