@@ -147,7 +147,7 @@ export async function POST(req: Request) {
       if (!costString) return "₹0";
       
       
-      let cleanCost = costString.replace(/[₹$€£¥₽₩₪₨₦₡₢₣₤₥₦₧₨₩₪₫₭₮₯₰₱₲₳₴₵₶₷₸₹₺₻₼₽₾₿]/g, '').trim();
+      const cleanCost = costString.replace(/[₹$€£¥₽₩₪₨₦₡₢₣₤₥₦₧₨₩₪₫₭₮₯₰₱₲₳₴₵₶₷₸₹₺₻₼₽₾₿]/g, '').trim();
       
 
       const cost = parseFloat(cleanCost.replace(/,/g, ''));
