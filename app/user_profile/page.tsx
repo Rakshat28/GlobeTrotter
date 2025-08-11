@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from 'react';
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -19,7 +20,7 @@ import { Camera, Edit3, MapPin, Calendar, Globe } from "lucide-react";
 // White: #FFFFFF
 // Black: #000000
 // Olive Green: #8E9C78
-// Sand Beige: #C7B697
+// Black: #000000
 // Light Mint: #DFECC6
 // Deep Olive: #485C11
 // Gray: #929292
@@ -75,7 +76,7 @@ export default function UserProfilePage() {
         <div className="z-10 flex flex-col items-center">
           {/* Profile Avatar */}
           <div className="relative mb-6">
-            <Avatar className="w-32 h-32 border-4 border-[#C7B697]/60 shadow-lg">
+            <Avatar className="w-32 h-32 border-4 border-[#000000]/60 shadow-lg">
               <AvatarImage src={profile.profileImage} alt={profile.name} />
               <AvatarFallback className="bg-[#DFECC6] text-[#485C11] text-2xl font-bold">
                 {profile.name.split(' ').map(n => n[0]).join('')}
@@ -109,32 +110,10 @@ export default function UserProfilePage() {
         </div>
       </section>
 
-      {/* Profile Stats */}
+      {/* Member Since - simple text under CTA */}
       <section className="w-full max-w-6xl pb-10">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 w-full">
-          <Card className="border-[#C7B697]/60 shadow-sm">
-            <CardContent className="pt-6 text-center">
-              <div className="text-3xl font-bold text-[#485C11] mb-2">{profile.totalTrips}</div>
-              <div className="text-[#929292]">Total Trips</div>
-            </CardContent>
-          </Card>
-          
-          <Card className="border-[#C7B697]/60 shadow-sm">
-            <CardContent className="pt-6 text-center">
-              <div className="text-3xl font-bold text-[#485C11] mb-2">{profile.countriesVisited}</div>
-              <div className="text-[#929292]">Countries Visited</div>
-            </CardContent>
-          </Card>
-          
-          <Card className="border-[#C7B697]/60 shadow-sm">
-            <CardContent className="pt-6 text-center">
-              <div className="flex items-center justify-center gap-2 mb-2">
-                <Calendar className="w-5 h-5 text-[#485C11]" />
-                <div className="text-lg font-semibold text-[#485C11]">{profile.joinDate}</div>
-              </div>
-              <div className="text-[#929292]">Member Since</div>
-            </CardContent>
-          </Card>
+        <div className="flex justify-center">
+          <p className="text-sm text-[#929292]">Member since {profile.joinDate}</p>
         </div>
         <div className="w-full h-px bg-[#DFECC6] mt-8" />
       </section>
@@ -143,7 +122,7 @@ export default function UserProfilePage() {
       <section className="w-full max-w-6xl pb-20">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Personal Information */}
-          <Card className="border-[#C7B697]/60 shadow-sm">
+          <Card className="border-[#000000]/60 shadow-sm">
             <CardHeader>
               <CardTitle className="text-[#000000] flex items-center gap-2">
                 <Globe className="w-5 h-5" />
@@ -249,15 +228,72 @@ export default function UserProfilePage() {
                 </div>
               </div>
 
-              {!isEditing && (
-                <div className="pt-4">
-                  <Button className="w-full px-6 py-3 text-base rounded-full shadow-lg bg-[#485C11] hover:bg-[#8E9C78] text-[#FFFFFF] transition-transform hover:scale-105">
-                    Plan New Trip Based on Preferences
-                  </Button>
-                </div>
-              )}
             </CardContent>
           </Card>
+        </div>
+      </section>
+
+      {/* Previous Trips */}
+      <section className="w-full max-w-6xl pb-20">
+        <h2
+          className="text-4xl font-bold text-[#000000] mb-8 text-center"
+          style={{ fontFamily: "'Playfair Display', serif" }}
+        >
+          Previous Trips
+        </h2>
+        {(() => {
+          type TripData = {
+            title: string;
+            country: string;
+            imageSrc?: string;
+            imageAlt?: string;
+          }
+
+          const previousTrips: TripData[] = [
+            { title: "Bali", country: "Indonesia", imageAlt: "Bali" },
+            { title: "Malaysia", country: "Malaysia", imageAlt: "Malaysia" },
+            { title: "Indonesia", country: "Southeast Asia", imageAlt: "Indonesia" },
+            { title: "Thailand", country: "Thailand", imageAlt: "Thailand" },
+          ]
+
+          return (
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-8 w-full">
+              {previousTrips.map((trip, index) => (
+                <Card
+                  key={`prev-${index}`}
+                  className="group w-full border-[#C7B697]/60 shadow-sm transition-transform duration-200 will-change-transform hover:-translate-y-1 hover:shadow-lg"
+                >
+                  <CardContent className="pt-6">
+                    <div className="rounded-xl overflow-hidden mb-4 w-full h-40">
+                      {trip.imageSrc ? (
+                        <img
+                          src={trip.imageSrc}
+                          alt={trip.imageAlt ?? trip.title}
+                          className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                        />
+                      ) : (
+                        <div
+                          className="w-full h-full bg-[#DFECC6]/40"
+                          aria-label={trip.imageAlt ?? trip.title}
+                        />
+                      )}
+                    </div>
+                    <div className="font-semibold text-[#000000]">{trip.title}</div>
+                    <div className="text-xs text-[#929292] mb-4">{trip.country}</div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          )
+        })()}
+      </section>
+
+      {/* See Listings Button */}
+      <section className="w-full max-w-6xl pb-24">
+        <div className="flex justify-center">
+          <Button asChild className="px-8 py-3 text-base rounded-full shadow-lg bg-[#485C11] hover:bg-[#8E9C78] text-[#FFFFFF] transition-transform hover:scale-105">
+            <Link href="/user_trip_listing">See Listings</Link>
+          </Button>
         </div>
       </section>
     </main>

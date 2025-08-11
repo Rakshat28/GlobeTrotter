@@ -13,7 +13,7 @@ import {
 // White: #FFFFFF
 // Black: #000000
 // Olive Green: #8E9C78
-// Sand Beige: #C7B697
+// Black: #000000
 // Light Mint: #DFECC6
 // Deep Olive: #485C11
 // Gray: #929292
@@ -27,7 +27,7 @@ type TripData = {
 
 const TripCard = ({ title, country, imageSrc, imageAlt, showButton = false }: TripData & { showButton?: boolean }) => {
   return (
-    <Card className="group w-full border-[#C7B697]/60 shadow-sm transition-transform duration-200 will-change-transform hover:-translate-y-1 hover:shadow-lg">
+    <Card className="group w-full border-[#000000]/60 shadow-sm transition-transform duration-200 will-change-transform hover:-translate-y-1 hover:shadow-lg">
       <CardContent className="pt-6">
         <div className="rounded-xl overflow-hidden mb-4 w-full h-40">
           {imageSrc ? (
@@ -90,8 +90,8 @@ export default function DashboardPage() {
           />
         </div>
         <div className="z-10">
-          <h1 className="text-5xl md:text-6xl font-serif font-bold mb-4 text-[#000000]" style={{ fontFamily: "'Playfair Display', serif" }}>
-            DISCOVER
+          <h1 className="text-5xl md:text-6xl font-serif text-[clamp(40px,7vw,96px)] font-bold mb-4 text-[#000000]" >
+            Discover
           </h1>
           <p className="text-lg mb-8 max-w-2xl text-[#929292]">
             the world 
@@ -100,12 +100,11 @@ export default function DashboardPage() {
             Plan New Trip
           </Button>
         </div>
-        <div className="w-full h-px bg-[#DFECC6] mt-8" />
       </section>
 
       {/* Cards Section - Popular Destinations */}
       <section className="w-full max-w-6xl pb-10">
-       <h2 className="text-4xl font-bold text-[#000000] mb-8 text-center" style={{ fontFamily: "'Playfair Display', serif" }}>
+       <h2 className="mt-8 text-4xl font-bold text-[#000000] mb-8 text-center" style={{ fontFamily: "'Playfair Display', serif" }}>
           Popular Destinations
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 w-full">

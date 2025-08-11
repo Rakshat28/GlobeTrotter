@@ -2,6 +2,7 @@
 
 
 import Image from "next/image"
+import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { Smartphone, Globe, Languages, TrendingUp, Sparkles, Check, ArrowRight, Phone } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -48,9 +49,6 @@ function HeroSection() {
             <div className="relative aspect-[16/9] w-full">
               <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.5),rgba(255,255,255,0)),url('/globe.svg')] bg-contain bg-center bg-no-repeat" />
               <div className="absolute inset-0 grid place-items-center">
-                <div className="pointer-events-none rounded-xl bg-black/5 p-2.5 text-lg font-medium text-foreground/80 backdrop-blur-sm">
-                  78% Efficiency Improvements
-                </div>
               </div>
             </div>
           </div>
@@ -96,19 +94,25 @@ function BenefitsSection() {
         </div>
 
 
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {items.map((item) => (
-            <Card key={item.title} className="h-full">
-              <CardContent className="flex h-full flex-col gap-3 p-6">
-                <div className="inline-flex size-10 items-center justify-center rounded-lg border bg-muted/60">
-                  <item.icon className="size-5" />
-                </div>
-                <h3 className="text-lg font-semibold">{item.title}</h3>
-                <p className="text-muted-foreground text-sm leading-relaxed">{item.body}</p>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
+                <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          {items.map((item) => (
+            <Card key={item.title} className="h-full">
+              <CardContent className="flex h-full flex-col gap-3 p-6">
+                <div className="inline-flex size-10 items-center justify-center rounded-lg border bg-muted/60">
+                  <item.icon className="size-5" />
+                </div>
+                <h3 className="text-lg font-semibold">{item.title}</h3>
+                <p className="text-muted-foreground text-sm leading-relaxed">{item.body}</p>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+        
+        <div className="mt-8 text-center">
+          <Button asChild className="gap-2">
+            <Link href="/community">Join Our Community <ArrowRight className="size-4" /></Link>
+          </Button>
+        </div>
       </div>
     </section>
   )
@@ -293,7 +297,9 @@ function ContactCTA() {
         <h2 className="text-pretty text-2xl font-semibold sm:text-3xl">Connect with us</h2>
         <p className="text-muted-foreground mx-auto mt-3 max-w-prose">Schedule a quick call to learn how Area can turn your regional data into a powerful advantage.</p>
         <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
-          <Button className="gap-2">Learn More <ArrowRight className="size-4" /></Button>
+          <Button asChild className="gap-2">
+            <Link href="/user_profile">Learn More <ArrowRight className="size-4" /></Link>
+          </Button>
           <Button variant="outline" className="gap-2"><Phone className="size-4" /> Phone</Button>
         </div>
       </div>
