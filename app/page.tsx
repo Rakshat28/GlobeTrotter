@@ -3,7 +3,10 @@
 
 import Image from "next/image"
 import Link from "next/link"
+<<<<<<< HEAD
 import { useRouter } from "next/navigation"
+=======
+>>>>>>> a70b3d59482967af98a4151715d54f9d66aa2102
 import { Smartphone, Globe, Languages, TrendingUp, Sparkles, Check, ArrowRight, Phone } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
@@ -291,6 +294,7 @@ function HowToSection({ onDiscoverMore }: { onDiscoverMore: () => void }) {
 
 
 function ContactCTA() {
+<<<<<<< HEAD
   return (
     <section id="contact" className="border-b">
       <div className="mx-auto max-w-5xl px-4 py-14 text-center sm:px-6">
@@ -305,10 +309,27 @@ function ContactCTA() {
       </div>
     </section>
   )
+=======
+  return (
+    <section id="contact" className="border-b">
+      <div className="mx-auto max-w-5xl px-4 py-14 text-center sm:px-6">
+        <h2 className="text-pretty text-2xl font-semibold sm:text-3xl">Connect with us</h2>
+        <p className="text-muted-foreground mx-auto mt-3 max-w-prose">Schedule a quick call to learn how Area can turn your regional data into a powerful advantage.</p>
+        <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
+          <Button className="gap-2">Learn More <ArrowRight className="size-4" /></Button>
+          <Button variant="outline" className="gap-2" asChild>
+            <Link href="/llm"><Phone className="size-4" /> Phone</Link>
+          </Button>
+        </div>
+      </div>
+    </section>
+  )
+>>>>>>> a70b3d59482967af98a4151715d54f9d66aa2102
 }
 
 
 function SiteFooter() {
+<<<<<<< HEAD
   return (
     <footer className="border-t">
       <div className="mx-auto flex max-w-6xl flex-col gap-6 px-4 py-10 sm:px-6 md:flex-row md:items-center md:justify-between">
@@ -337,3 +358,22 @@ function SiteFooter() {
     </footer>
     )
 }
+=======
+  return (
+    <footer className="border-t">
+      <div className="mx-auto flex max-w-6xl flex-col gap-6 px-4 py-10 sm:px-6 md:flex-row md:items-center md:justify-between">
+        <div className="flex items-center gap-2">
+          <span className="inline-flex size-7 items-center justify-center rounded-md border"><Sparkles className="size-4" /></span>
+          <span className="font-semibold">Area</span>
+        </div>
+        <nav className="flex flex-wrap items-center gap-5 text-sm text-muted-foreground">
+          <a href="#benefits" className="hover:underline">Benefits</a>
+          <a href="#specs" className="hover:underline">Specifications</a>
+          <a href="#howto" className="hover:underline">How-to</a>
+          <a href="#contact" className="hover:underline">Contact Us</a>
+        </nav>
+      </div>
+    </footer>
+  )
+}
+>>>>>>> a70b3d59482967af98a4151715d54f9d66aa2102
