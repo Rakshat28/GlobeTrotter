@@ -1,5 +1,6 @@
 import { headers } from "next/headers";
 import { Webhook, WebhookRequiredHeaders } from "svix";
+import type { WebhookEvent } from "@clerk/clerk-sdk-node";
 import { NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
 
@@ -24,9 +25,9 @@ export async function POST(req: Request) {
   const payload = await req.text();
 
   const wh = new Webhook(WEBHOOK_SECRET);
-  let evt: any;
+  let evt: WebhookEvent;
   try {
-    evt = wh.verify(payload, {
+    evt = await wh.verify(payload, {
       "svix-id": svix_id,
       "svix-timestamp": svix_timestamp,
       "svix-signature": svix_signature,
