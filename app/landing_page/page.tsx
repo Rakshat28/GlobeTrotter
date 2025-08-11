@@ -21,22 +21,28 @@ import {
 type TripData = {
   title: string;
   country: string;
-  imageSrc: string;
-  imageAlt: string;
+  imageSrc?: string;
+  imageAlt?: string;
 };
 
-const TripCard = ({ title, country, imageSrc, imageAlt }: TripData) => {
+const TripCard = ({ title, country, imageSrc, imageAlt, showButton = false }: TripData & { showButton?: boolean }) => {
   return (
-    <Card className="w-full border-[#C7B697]/60 shadow-sm">
-      <CardHeader>
-        <CardTitle className="text-[#000000]">Upcoming Trips</CardTitle>
-      </CardHeader>
-      <CardContent>
+    <Card className="group w-full border-[#C7B697]/60 shadow-sm transition-transform duration-200 will-change-transform hover:-translate-y-1 hover:shadow-lg">
+      <CardContent className="pt-6">
         <div className="rounded-xl overflow-hidden mb-4 w-full h-40">
-          <img src={imageSrc} alt={imageAlt} className="w-full h-full object-cover"/>
+          {imageSrc ? (
+            <img src={imageSrc} alt={imageAlt ?? title} className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" />
+          ) : (
+            <div className="w-full h-full bg-[#DFECC6]/40" aria-label={imageAlt ?? title} />
+          )}
         </div>
         <div className="font-semibold text-[#000000]">{title}</div>
-        <div className="text-xs text-[#929292] mb-2">{country}</div>
+        <div className="text-xs text-[#929292] mb-4">{country}</div>
+        {showButton && (
+          <Button className="w-full px-4 py-2 text-sm rounded-full shadow-lg bg-[#485C11] hover:bg-[#8E9C78] text-[#FFFFFF] transition-transform hover:scale-105">
+            Get Itinerary
+          </Button>
+        )}
       </CardContent>
     </Card>
   );
@@ -64,6 +70,13 @@ export default function DashboardPage() {
     }
   ];
 
+  const previousTrips: TripData[] = [
+    { title: "Bali", country: "Indonesia", imageAlt: "Bali" },
+    { title: "Malaysia", country: "Malaysia", imageAlt: "Malaysia" },
+    { title: "Indonesia", country: "Southeast Asia", imageAlt: "Indonesia" },
+    { title: "Thailand", country: "Thailand", imageAlt: "Thailand" },
+  ];
+
   return (
     <main className="min-h-screen bg-[#fafafa] flex flex-col items-center">
       {/* Hero Section */}
@@ -78,28 +91,54 @@ export default function DashboardPage() {
         </div>
         <div className="z-10">
           <h1 className="text-5xl md:text-6xl font-serif font-bold mb-4 text-[#000000]" style={{ fontFamily: "'Playfair Display', serif" }}>
-            Plan Your Perfect Journey
+            DISCOVER
           </h1>
           <p className="text-lg mb-8 max-w-2xl text-[#929292]">
-            Your central hub for upcoming trips, top destinations, and inspiration.
+            the world 
           </p>
           <Button className="px-8 py-6 text-base rounded-full shadow-lg bg-[#485C11] hover:bg-[#8E9C78] text-[#FFFFFF] transition-transform hover:scale-105">
             Plan New Trip
           </Button>
         </div>
+        <div className="w-full h-px bg-[#DFECC6] mt-8" />
       </section>
 
-      {/* Cards Section */}
-      <section className="grid grid-cols-1 md:grid-cols-3 gap-8 w-full max-w-6xl justify-center pb-20">
-        {trips.map((trip, index) => (
-          <TripCard
-            key={index}
-            title={trip.title}
-            country={trip.country}
-            imageSrc={trip.imageSrc}
-            imageAlt={trip.imageAlt}
-          />
-        ))}
+      {/* Cards Section - Popular Destinations */}
+      <section className="w-full max-w-6xl pb-10">
+       <h2 className="text-4xl font-bold text-[#000000] mb-8 text-center" style={{ fontFamily: "'Playfair Display', serif" }}>
+          Popular Destinations
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 w-full">
+          {trips.map((trip, index) => (
+            <TripCard
+              key={index}
+              title={trip.title}
+              country={trip.country}
+              imageSrc={trip.imageSrc}
+              imageAlt={trip.imageAlt}
+              showButton={true}
+            />
+          ))}
+        </div>
+        <div className="w-full h-px bg-[#DFECC6] mt-8" />
+      </section>
+
+      {/* Previous Trips */}
+      <section className="w-full max-w-6xl pb-20">
+        <h2 className="text-4xl font-bold text-[#000000] mb-8 text-center" style={{ fontFamily: "'Playfair Display', serif" }}>
+          Previous Trips
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 w-full">
+          {previousTrips.map((trip, index) => (
+            <TripCard
+              key={`prev-${index}`}
+              title={trip.title}
+              country={trip.country}
+              imageAlt={trip.imageAlt}
+              showButton={false}
+            />
+          ))}
+        </div>
       </section>
     </main>
   );
