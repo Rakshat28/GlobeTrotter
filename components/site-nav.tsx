@@ -14,7 +14,7 @@ export function SiteNav() {
         <Link href="/" className="flex items-center gap-2 text-lg font-semibold text-primary hover:text-primary/80 transition-colors">
           <span className="inline-flex size-7 items-center justify-center rounded-md border border-primary bg-primary/10"><Sparkles className="size-4 text-primary" /></span>
           <span>GlobeTrotter</span>
-        </Link>
+
         <nav className="hidden items-center gap-6 text-sm font-medium md:flex">
           {/* Use Link for internal navigation links */}
           <Link className="hover:text-primary transition-colors" href="/llm">AI Travel Planner</Link>
