@@ -6,6 +6,7 @@ import {
   ClerkProvider,
 } from '@clerk/nextjs'
 import { SiteNav } from "@/components/site-nav";
+import { FloatingChatbot } from "@/components/FloatingChatbot";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -34,6 +35,7 @@ export default function RootLayout({
         <ClerkProvider>
         <SiteNav />
         {children}
+        <FloatingChatbot />
         </ClerkProvider>
         
       </body>
