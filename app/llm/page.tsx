@@ -1,4 +1,5 @@
 "use client";
+
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -98,7 +99,7 @@ const transportOptions = [
   "Mixed",
 ];
 
-export default function TravelPlanner() {
+export default function LLMPage() {
   const [loading, setLoading] = useState(false);
   const [plan, setPlan] = useState<TravelPlan | null>(null);
   const [summary, setSummary] = useState("");
@@ -131,17 +132,20 @@ export default function TravelPlanner() {
           .filter(Boolean),
       };
 
-      const res = await fetch("http://localhost:8000/generate_plan_with_summary", {
+      // Call the Next.js API route
+      const res = await fetch("/api/generatePlanWithSummary", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
 
       if (!res.ok) {
-        const errData = await res.json();
-        throw new Error(errData.detail || "Request failed");
+        let errMsg = "Request failed";
+        try {
+          const errData = await res.json();
+          errMsg = errData.error || errData.detail || errMsg;
+        } catch {}
+        throw new Error(errMsg);
       }
 
       const data: ApiResponse = await res.json();
@@ -156,19 +160,23 @@ export default function TravelPlanner() {
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6">
+      {/* --- Form --- */}
       <Card className="mb-6">
         <CardHeader>
           <CardTitle className="text-2xl">Create a new Trip</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+            {/* Left Column */}
             <div className="space-y-3">
               <label className="text-sm font-medium">
                 Destination
                 <Input
                   className="mt-1"
                   value={form.destination}
-                  onChange={(e) => setForm((p) => ({ ...p, destination: e.target.value }))}
+                  onChange={(e) =>
+                    setForm((p) => ({ ...p, destination: e.target.value }))
+                  }
                   placeholder="City, Country"
                 />
               </label>
@@ -179,7 +187,9 @@ export default function TravelPlanner() {
                   type="number"
                   min={1}
                   value={form.duration}
-                  onChange={(e) => setForm((p) => ({ ...p, duration: Number(e.target.value) }))}
+                  onChange={(e) =>
+                    setForm((p) => ({ ...p, duration: Number(e.target.value) }))
+                  }
                 />
               </label>
               <label className="text-sm font-medium">
@@ -187,7 +197,9 @@ export default function TravelPlanner() {
                 <Input
                   className="mt-1"
                   value={form.travel_style}
-                  onChange={(e) => setForm((p) => ({ ...p, travel_style: e.target.value }))}
+                  onChange={(e) =>
+                    setForm((p) => ({ ...p, travel_style: e.target.value }))
+                  }
                   placeholder="Cultural, Adventure, Relaxation..."
                 />
               </label>
@@ -202,13 +214,16 @@ export default function TravelPlanner() {
               </label>
             </div>
 
+            {/* Right Column */}
             <div className="space-y-3">
               <label className="text-sm font-medium">
                 Budget
                 <div className="mt-1">
                   <Select
                     value={form.budget}
-                    onValueChange={(val) => setForm((p) => ({ ...p, budget: val }))}
+                    onValueChange={(val) =>
+                      setForm((p) => ({ ...p, budget: val }))
+                    }
                   >
                     <SelectTrigger className="w-full">
                       <SelectValue placeholder="Select a budget" />
@@ -229,7 +244,9 @@ export default function TravelPlanner() {
                 <div className="mt-1">
                   <Select
                     value={form.accommodation}
-                    onValueChange={(val) => setForm((p) => ({ ...p, accommodation: val }))}
+                    onValueChange={(val) =>
+                      setForm((p) => ({ ...p, accommodation: val }))
+                    }
                   >
                     <SelectTrigger className="w-full">
                       <SelectValue placeholder="Choose accommodation" />
@@ -250,7 +267,9 @@ export default function TravelPlanner() {
                 <div className="mt-1">
                   <Select
                     value={form.transportation}
-                    onValueChange={(val) => setForm((p) => ({ ...p, transportation: val }))}
+                    onValueChange={(val) =>
+                      setForm((p) => ({ ...p, transportation: val }))
+                    }
                   >
                     <SelectTrigger className="w-full">
                       <SelectValue placeholder="Choose transportation" />
@@ -272,7 +291,12 @@ export default function TravelPlanner() {
                   className="mt-1"
                   rows={4}
                   value={form.special_requests}
-                  onChange={(e) => setForm((p) => ({ ...p, special_requests: e.target.value }))}
+                  onChange={(e) =>
+                    setForm((p) => ({
+                      ...p,
+                      special_requests: e.target.value,
+                    }))
+                  }
                   placeholder="Dietary needs, accessibility, etc."
                 />
               </label>
@@ -280,14 +304,21 @@ export default function TravelPlanner() {
           </div>
 
           <div className="mt-4">
-            <Button onClick={generatePlan} disabled={loading} className="rounded-full px-6">
+            <Button
+              onClick={generatePlan}
+              disabled={loading}
+              className="rounded-full px-6"
+            >
               {loading ? "Generating..." : "Generate Travel Plan"}
             </Button>
-            {error && <p className="mt-3 text-sm text-red-600">Error: {error}</p>}
+            {error && (
+              <p className="mt-3 text-sm text-red-600">Error: {error}</p>
+            )}
           </div>
         </CardContent>
       </Card>
 
+      {/* --- Itinerary --- */}
       {plan && (
         <Card className="mb-6">
           <CardHeader>
@@ -299,12 +330,24 @@ export default function TravelPlanner() {
                 <div key={idx} className="rounded-md border p-4">
                   <h3 className="font-semibold">{day.day}</h3>
                   <div className="mt-2 grid gap-2 sm:grid-cols-2">
-                    <p><span className="font-medium">Morning:</span> {day.morning}</p>
-                    <p><span className="font-medium">Afternoon:</span> {day.afternoon}</p>
-                    <p><span className="font-medium">Evening:</span> {day.evening}</p>
-                    <p><span className="font-medium">Accommodation:</span> {day.accommodation}</p>
-                    <p><span className="font-medium">Meals:</span> {day.meals}</p>
-                    <p><span className="font-medium">Cost:</span> {day.estimated_cost}</p>
+                    <p>
+                      <span className="font-medium">Morning:</span> {day.morning}
+                    </p>
+                    <p>
+                      <span className="font-medium">Afternoon:</span> {day.afternoon}
+                    </p>
+                    <p>
+                      <span className="font-medium">Evening:</span> {day.evening}
+                    </p>
+                    <p>
+                      <span className="font-medium">Accommodation:</span> {day.accommodation}
+                    </p>
+                    <p>
+                      <span className="font-medium">Meals:</span> {day.meals}
+                    </p>
+                    <p>
+                      <span className="font-medium">Cost:</span> {day.estimated_cost}
+                    </p>
                   </div>
                 </div>
               ))}
@@ -344,6 +387,7 @@ export default function TravelPlanner() {
         </Card>
       )}
 
+      {/* --- Summary --- */}
       {summary && (
         <Card>
           <CardHeader>
