@@ -1,160 +1,159 @@
 generator client {
-provider = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
 datasource db {
-provider = "postgresql"
-url = env("DATABASE_URL")
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 enum Category {
-TRANSPORT
-FOOD
-HOTEL
+  TRANSPORT
+  FOOD
+  HOTEL
+}
+
+enum UserRole {
+  USER
+  ADMIN
 }
 
 model User {
-user_id String @id @default(cuid())
-password_hash String?
-email String @unique
-created_at DateTime @default(now())
-updated_at DateTime @updatedAt
-profile_photo_url String?
+  user_id           String    @id @default(cuid())
+  password_hash     String?
+  email             String    @unique
+  role              UserRole  @default(USER)
+  created_at        DateTime  @default(now())
+  updated_at        DateTime  @updatedAt
+  profile_photo_url String?
 
-trips Trip[]
-reviews Review[]
+  trips   Trip[]
+  reviews Review[]
 
-@@map("users")
+  @@map("users")
 }
 
 model Admin {
-admin_id Int @id @default(autoincrement())
-email String @unique
-password String
-top_cities String?
-city_id Int?
-city City? @relation(fields: [city_id], references: [city_id])
+  admin_id   Int     @id @default(autoincrement())
+  email      String  @unique
+  password   String
+  top_cities String?
+  city_id    Int?
+  city       City?   @relation(fields: [city_id], references: [city_id])
+  trips      Trip[]  @relation("AdminTrips")
 
-trips Trip[] @relation("AdminTrips")
-
-@@map("admin")
+  @@map("admin")
 }
 
 model City {
-city_id Int @id @default(autoincrement())
-country String?
-state String?
-city String
-image_url String?
-description String?
+  city_id     Int        @id @default(autoincrement())
+  country     String?
+  state       String?
+  city        String
+  image_url   String?
+  description String?
 
-admins Admin[]
-// removed trips direct link; trips connect via stops
-activities Activity[]
-stops Stop[]
+  admins     Admin[]
+  activities Activity[]
+  stops      Stop[]
 
-@@map("city")
-@@index([city, state, country])
+  @@map("city")
+  @@index([city, state, country])
 }
 
 model Trip {
-trip_id Int @id @default(autoincrement())
-description String?
-start_date DateTime?
-end_date DateTime?
+  trip_id     Int       @id @default(autoincrement())
+  description String?
+  start_date  DateTime?
+  end_date    DateTime?
 
-user_id String
-user User @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
+  user_id String
+  user    User      @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
 
-// trip can optionally be linked to an admin (info_with)
-admin_id Int?
-admin Admin? @relation("AdminTrips", fields: [admin_id], references: [admin_id])
+  admin_id Int?
+  admin    Admin?    @relation("AdminTrips", fields: [admin_id], references: [admin_id])
 
-budgets Budget[]
-stops Stop[]
-reviews Review[]
+  budgets Budget[]
+  stops   Stop[]
+  reviews Review[]
 
-@@map("trips")
-@@index([user_id])
+  @@map("trips")
+  @@index([user_id])
 }
 
 model Budget {
-budget_id Int @id @default(autoincrement())
-amount Float
-trip_id Int
-trip Trip @relation(fields: [trip_id], references: [trip_id], onDelete: Cascade)
-category Category
+  budget_id Int      @id @default(autoincrement())
+  amount    Float
+  trip_id   Int
+  trip      Trip     @relation(fields: [trip_id], references: [trip_id], onDelete: Cascade)
+  category  Category
 
-@@map("budgets")
-@@index([trip_id])
+  @@map("budgets")
+  @@index([trip_id])
 }
 
 model Activity {
-activity_id Int @id @default(autoincrement())
-name String
-type String
-cost Float?
-image_url String?
-duration Int?
+  activity_id    Int            @id @default(autoincrement())
+  name           String
+  type           String
+  cost           Float?
+  image_url      String?
+  duration       Int?
 
-// Activities are cataloged per city
-city_id Int
-city City @relation(fields: [city_id], references: [city_id])
+  city_id        Int
+  city           City           @relation(fields: [city_id], references: [city_id])
+  stopActivities StopActivity[]
 
-stopActivities StopActivity[]
-
-@@map("activities")
-@@index([city_id])
+  @@map("activities")
+  @@index([city_id])
 }
 
 model Stop {
-id Int @id @default(autoincrement())
+  id              Int       @id @default(autoincrement())
+  trip_id         Int
+  trip            Trip      @relation(fields: [trip_id], references: [trip_id], onDelete: Cascade)
+  city_id         Int
+  city            City      @relation(fields: [city_id], references: [city_id])
+  sequence        Int
+  arrival_date    DateTime?
+  departure_date  DateTime?
+  stopActivities  StopActivity[]
 
-trip_id Int
-trip Trip @relation(fields: [trip_id], references: [trip_id], onDelete: Cascade)
-
-city_id Int
-city City @relation(fields: [city_id], references: [city_id])
-
-// ordering and timing for multi-city itineraries
-sequence Int
-arrival_date DateTime?
-departure_date DateTime?
-
-stopActivities StopActivity[]
-
-@@map("stops")
-@@unique([trip_id, sequence]) // one sequence position per trip
-@@index([trip_id])
-@@index([city_id])
+  @@map("stops")
+  @@unique([trip_id, sequence])
+  @@index([trip_id])
+  @@index([city_id])
 }
 
 model StopActivity {
-id Int @id @default(autoincrement())
-stop_id Int
-activity_id Int
+  id          Int      @id @default(autoincrement())
+  stop_id     Int
+  activity_id Int
 
-stop Stop @relation(fields: [stop_id], references: [id], onDelete: Cascade)
-activity Activity @relation(fields: [activity_id], references: [activity_id], onDelete: Cascade)
+  stop     Stop     @relation(fields: [stop_id], references: [id], onDelete: Cascade)
+  activity Activity @relation(fields: [activity_id], references: [activity_id], onDelete: Cascade)
 
-@@unique([stop_id, activity_id])
-@@map("stop_activities")
-@@index([stop_id])
-@@index([activity_id])
+  @@unique([stop_id, activity_id])
+  @@map("stop_activities")
+  @@index([stop_id])
+  @@index([activity_id])
 }
 
 model Review {
-review_id Int @id @default(autoincrement())
-user_id String
-trip_id Int
-stars Int @db.SmallInt
-description String
-created_at DateTime @default(now())
+  review_id   Int      @id @default(autoincrement())
+  user_id     String
+  trip_id     Int
+  stars       Int      @db.SmallInt
+  description String
+  created_at  DateTime @default(now())
 
-user User @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
-trip Trip @relation(fields: [trip_id], references: [trip_id], onDelete: Cascade)
+  user Trip @relation(fields: [trip_id], references: [trip_id], onDelete: Cascade)
+  trip Trip @relation(fields: [trip_id], references: [trip_id], onDelete: Cascade)
+  // this is the user relation from aish_final branch, not main branch
+  // user User @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
+  // I have used the user field from aish_final branch, not main.
 
-@@map("reviews")
-@@index([trip_id])
-@@index([user_id])
+  @@map("reviews")
+  @@index([trip_id])
+  @@index([user_id])
 }
