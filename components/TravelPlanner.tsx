@@ -3,6 +3,31 @@
 
 import { useState } from "react";
 
+interface TravelPlan {
+  itinerary: Array<{
+    day: string;
+    morning: string;
+    afternoon: string;
+    evening: string;
+    accommodation: string;
+    meals: string;
+    estimated_cost: string;
+  }>;
+  total_estimated_cost: string;
+  travel_tips: string[];
+  packing_list: string[];
+  emergency_contacts: {
+    local_emergency: string;
+    embassy: string;
+    hotel: string;
+  };
+}
+
+interface ApiResponse {
+  plan: TravelPlan;
+  summary: string;
+}
+
 export default function TravelPlanner() {
   const [form, setForm] = useState({
     destination: "",
@@ -15,7 +40,7 @@ export default function TravelPlanner() {
     special_requests: ""
   });
 
-  const [result, setResult] = useState<any>(null);
+  const [result, setResult] = useState<ApiResponse | null>(null);
   const [loading, setLoading] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
