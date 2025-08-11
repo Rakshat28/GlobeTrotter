@@ -2,13 +2,6 @@
 
 import Image from "next/image"
 import Link from "next/link"
-<<<<<<< HEAD
-<<<<<<< HEAD
-import { useRouter } from "next/navigation"
-=======
->>>>>>> a70b3d59482967af98a4151715d54f9d66aa2102
-=======
->>>>>>> f21e03e598da3d82b2c0eba5ab1f12dc0131104e
 import { Smartphone, Globe, Languages, TrendingUp, Sparkles, Check, ArrowRight, Phone } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
@@ -271,25 +264,6 @@ function HowToSection() {
 }
 
 function ContactCTA() {
-<<<<<<< HEAD
-<<<<<<< HEAD
-  return (
-    <section id="contact" className="border-b">
-      <div className="mx-auto max-w-5xl px-4 py-14 text-center sm:px-6">
-        <h2 className="text-pretty text-2xl font-semibold sm:text-3xl">Connect with us</h2>
-        <p className="text-muted-foreground mx-auto mt-3 max-w-prose">Schedule a quick call to learn how Area can turn your regional data into a powerful advantage.</p>
-        <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
-          <Button asChild className="gap-2">
-            <Link href="/user_profile">Learn More <ArrowRight className="size-4" /></Link>
-          </Button>
-          <Button variant="outline" className="gap-2"><Phone className="size-4" /> Phone</Button>
-        </div>
-      </div>
-    </section>
-  )
-=======
-=======
->>>>>>> f21e03e598da3d82b2c0eba5ab1f12dc0131104e
   return (
     <section id="contact" className="border-b">
       <div className="mx-auto max-w-5xl px-4 py-14 text-center sm:px-6">
@@ -304,46 +278,9 @@ function ContactCTA() {
       </div>
     </section>
   )
-<<<<<<< HEAD
->>>>>>> a70b3d59482967af98a4151715d54f9d66aa2102
-=======
->>>>>>> f21e03e598da3d82b2c0eba5ab1f12dc0131104e
 }
 
 function SiteFooter() {
-<<<<<<< HEAD
-<<<<<<< HEAD
-  return (
-    <footer className="border-t">
-      <div className="mx-auto flex max-w-6xl flex-col gap-6 px-4 py-10 sm:px-6 md:flex-row md:items-center md:justify-between">
-        <div className="flex items-center gap-2">
-          <span className="inline-flex size-7 items-center justify-center rounded-md border"><Sparkles className="size-4" /></span>
-          <span className="font-semibold">Area</span>
-        </div>
-        <nav className="flex flex-wrap items-center gap-5 text-sm text-muted-foreground">
-          <a href="#benefits" className="hover:underline">Benefits</a>
-          <a href="#specs" className="hover:underline">Specifications</a>
-          <a href="#howto" className="hover:underline">How-to</a>
-          <a href="#contact" className="hover:underline">Contact Us</a>
-        </nav>
-      </div>
-      <div className="border-t">
-        <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-3 px-4 py-6 text-center text-sm text-muted-foreground sm:flex-row sm:px-6">
-          <p>© Area. 2025 • All Rights Reserved</p>
-          <div className="flex items-center gap-6">
-            <a className="hover:underline" href="#">Benefits</a>
-            <a className="hover:underline" href="#">Specifications</a>
-            <a className="hover:underline" href="#">How-to</a>
-            <a className="hover:underline" href="#">Contact Us</a>
-          </div>
-        </div>
-      </div>
-    </footer>
-    )
-}
-=======
-=======
->>>>>>> f21e03e598da3d82b2c0eba5ab1f12dc0131104e
   return (
     <footer className="border-t">
       <div className="mx-auto flex max-w-6xl flex-col gap-6 px-4 py-10 sm:px-6 md:flex-row md:items-center md:justify-between">
@@ -360,9 +297,4 @@ function SiteFooter() {
       </div>
     </footer>
   )
-<<<<<<< HEAD
 }
->>>>>>> a70b3d59482967af98a4151715d54f9d66aa2102
-=======
-}
->>>>>>> f21e03e598da3d82b2c0eba5ab1f12dc0131104e
